@@ -10,8 +10,6 @@ services:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       MAPY_CZ_API_KEY: ${MAPY_CZ_API_KEY}
-      APRSFI_API_KEY: ${APRSFI_API_KEY}
-      APRS_STATIONS: ${APRS_STATIONS}
     volumes:
       - data_files:/var/www/html/data_files
     depends_on:

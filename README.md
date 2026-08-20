@@ -9,7 +9,6 @@ Live site: https://ham-map.com
 - `index.php` renders the map (PHP + Leaflet), querying activation points from a MySQL/MariaDB database.
 - `cron/synchro*.php` are standalone scripts that download the public CSV/data feeds published by WWFF, POTA, SOTA, GMA and WWBOTA and load them into the database. They're meant to run daily via cron (see `docker/crontab`).
 - `cron/synchroc.php` / `cron/synchrocenter.php` seed the `country` reference table (country codes and map-centering coordinates) — this rarely changes, so it's a one-off/occasional script rather than part of the daily schedule.
-- `aprs.php` shows live temperature readings from a handful of APRS weather stations via [aprs.fi](https://aprs.fi/).
 
 ## Running with Docker
 
@@ -21,9 +20,8 @@ Requirements: Docker and Docker Compose.
    cp .env.example .env
    ```
 
-   You'll need two free API keys:
+   You'll need a free API key:
    - **Mapy.cz** tiles: https://developer.mapy.cz/
-   - **aprs.fi**: https://aprs.fi/page/api (only needed for `aprs.php`)
 
 2. Start everything:
 
