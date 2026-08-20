@@ -500,7 +500,7 @@ if ($bota=="Yes") {
             Later I added more features, better backend and frontend and other data sources such as POTA, SOTA etc.</p></div>
             <div class="notes"><p><a href='old/'>Original (old) version of this map</a>.</p></div>
             <div class="bottom">
-                <span>created by Michal <a href="https://www.qrz.com/db/OK1SIM">OK1SIM</a> for community</span>
+                <span>Open source on <a href="https://github.com/michalsiman/ham-map">GitHub</a></span>
             </div>
         </div>`;
 
