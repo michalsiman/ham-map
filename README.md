@@ -8,7 +8,7 @@ Live site: https://ham-map.com
 
 - `index.php` renders the map (PHP + Leaflet), querying activation points from a MySQL/MariaDB database.
 - `cron/synchro*.php` are standalone scripts that download the public CSV/data feeds published by WWFF, POTA, SOTA, GMA and WWBOTA and load them into the database. They're meant to run daily via cron (see `docker/crontab`).
-- `cron/synchroc.php` / `cron/synchrocenter.php` seed the `country` reference table (country codes and map-centering coordinates) — this rarely changes, so it's a one-off/occasional script rather than part of the daily schedule.
+- `cron/synchroc.php` and `cron/synchrocenter.php` downloaded ISO country codes and map-centering coordinates into the `country` table, but their actual database write is currently commented out upstream (there's no unique key on `code` to make repeated inserts safe), so they no longer do anything useful. The `country` table is instead provided as a static, one-time snapshot in `sql/seed_country.sql` — see below.
 
 ## Running with Docker
 
@@ -31,10 +31,10 @@ Requirements: Docker and Docker Compose.
 
    This starts three containers:
    - `web` — the PHP/Apache app, on http://localhost:8080
-   - `db` — MariaDB, auto-provisioned from `sql/schema.sql` on first boot
+   - `db` — MariaDB, auto-provisioned from `sql/schema.sql` (tables) and `sql/seed_country.sql` (static country reference data) on first boot
    - `cron` — runs the daily data-sync jobs (`docker/crontab`)
 
-3. The database starts empty. Either wait for the next scheduled cron run, or populate it immediately:
+3. The activation tables (WWFF/POTA/SOTA/GMA/WWBOTA) start empty — only `country` is pre-seeded. Either wait for the next scheduled cron run, or populate them immediately:
 
    ```
    docker compose exec cron php cron/synchro.php
@@ -42,15 +42,13 @@ Requirements: Docker and Docker Compose.
    docker compose exec cron php cron/synchro3.php
    docker compose exec cron php cron/synchro4.php
    docker compose exec cron php cron/synchro5.php
-   docker compose exec cron php cron/synchroc.php
-   docker compose exec cron php cron/synchrocenter.php
    ```
 
 ## Running without Docker
 
 Requirements: PHP 8.2+ with the `mysqli` extension, and a MySQL/MariaDB server.
 
-1. Create a database and load `sql/schema.sql` into it.
+1. Create a database and load `sql/schema.sql` (tables) and `sql/seed_country.sql` (country reference data) into it.
 2. Set the environment variables listed in `.env.example` (`DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`, `MAPY_CZ_API_KEY`, ...) in your web server / PHP-FPM environment.
 3. Point your web server's document root at the repository root.
 4. Schedule `cron/synchro*.php` to run daily (see `docker/crontab` for the recommended schedule).
